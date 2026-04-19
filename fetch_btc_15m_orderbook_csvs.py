@@ -15,22 +15,22 @@ from fetch_btc_15m_orderbooks import build_slots, read_api_key, resolve_markets,
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Fetch BTC 15-minute Polymarket orderbook snapshots and save plain CSVs."
+        description="拉取 BTC 15 分钟 Polymarket 订单簿快照，并直接保存为普通 CSV。"
     )
-    parser.add_argument("--days", type=int, default=30, help="Trailing completed days to fetch.")
-    parser.add_argument("--max-slots", type=int, default=None, help="Optional cap for recent N slots.")
-    parser.add_argument("--key-file", default="key.txt", help="API key file.")
+    parser.add_argument("--days", type=int, default=30, help="拉取最近多少天已结束的 slot。")
+    parser.add_argument("--max-slots", type=int, default=None, help="可选，仅处理最近 N 个 slot。")
+    parser.add_argument("--key-file", default="key.txt", help="API Key 文件路径。")
     parser.add_argument(
         "--output-dir",
         default="data/btc_15m_orderbook_csv_month",
-        help="Directory where dated CSV folders and manifest will be written.",
+        help="按日期分组的 CSV 文件夹和 manifest 输出目录。",
     )
-    parser.add_argument("--depth", type=int, default=5, help="Best bid/ask levels to retain.")
-    parser.add_argument("--market-batch-size", type=int, default=100, help="Market resolve batch size.")
-    parser.add_argument("--orderbook-page-limit", type=int, default=200, help="Orderbook history page size.")
-    parser.add_argument("--retry-attempts", type=int, default=5, help="Retry attempts for transient failures.")
-    parser.add_argument("--retry-base-sleep", type=float, default=1.5, help="Base retry sleep seconds.")
-    parser.add_argument("--overwrite", action="store_true", help="Overwrite existing CSVs.")
+    parser.add_argument("--depth", type=int, default=5, help="保留的最优买卖盘档位数。")
+    parser.add_argument("--market-batch-size", type=int, default=100, help="批量解析 market 的请求大小。")
+    parser.add_argument("--orderbook-page-limit", type=int, default=200, help="订单簿历史分页大小。")
+    parser.add_argument("--retry-attempts", type=int, default=5, help="临时失败时的重试次数。")
+    parser.add_argument("--retry-base-sleep", type=float, default=1.5, help="基础重试等待秒数。")
+    parser.add_argument("--overwrite", action="store_true", help="如果 CSV 已存在则覆盖。")
     return parser.parse_args()
 
 
@@ -132,7 +132,7 @@ def main() -> None:
 
     slots = build_slots(args.days, args.max_slots)
     if not slots:
-        raise ValueError("No slots generated.")
+        raise ValueError("没有生成任何 slot。")
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

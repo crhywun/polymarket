@@ -16,17 +16,14 @@ BTC_COLOR = "#2d3a4a"
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description=(
-            "Render a single-panel overview chart for a BTC 15-minute market "
-            "using enriched Up/Down orderbook CSV files."
-        )
+        description="使用增强版 Up/Down 订单簿 CSV，为单个 BTC 15 分钟市场绘制单面板概览图。"
     )
-    parser.add_argument("--up", required=True, help="Path to the Up enriched CSV.")
-    parser.add_argument("--down", required=True, help="Path to the Down enriched CSV.")
+    parser.add_argument("--up", required=True, help="Up 侧增强版 CSV 路径。")
+    parser.add_argument("--down", required=True, help="Down 侧增强版 CSV 路径。")
     parser.add_argument(
         "--output",
         default=None,
-        help="Optional output path. Defaults next to the Up CSV as *_overview.png.",
+        help="可选的输出路径，默认在 Up CSV 同目录生成 *_overview.png。",
     )
     return parser.parse_args()
 
@@ -35,7 +32,7 @@ def load_market_frame(path: Path) -> tuple[pd.DataFrame, dict[str, str]]:
     df = pd.read_csv(path)
     df = df[df["bid_1_price"].notna() & df["ask_1_price"].notna()].copy()
     if df.empty:
-        raise ValueError(f"No rows with both bid_1_price and ask_1_price in {path}")
+        raise ValueError(f"{path} 中没有同时包含 bid_1_price 和 ask_1_price 的有效行")
 
     for column in ("bid_1_price", "ask_1_price", "btc_price"):
         if column in df.columns:
@@ -56,10 +53,10 @@ def load_market_frame(path: Path) -> tuple[pd.DataFrame, dict[str, str]]:
 def load_btc_frame(path: Path) -> pd.DataFrame:
     df = pd.read_csv(path)
     if "btc_price" not in df.columns or "btc_price_timestamp_utc" not in df.columns:
-        raise ValueError(f"BTC columns not found in {path}")
+        raise ValueError(f"{path} 中没有找到 BTC 价格相关字段")
     df = df[df["btc_price"].notna() & df["btc_price_timestamp_utc"].notna()].copy()
     if df.empty:
-        raise ValueError(f"No BTC price rows found in {path}")
+        raise ValueError(f"{path} 中没有可用的 BTC 价格记录")
 
     df["btc_price"] = pd.to_numeric(df["btc_price"], errors="coerce")
     df["btc_price_timestamp_utc"] = pd.to_datetime(

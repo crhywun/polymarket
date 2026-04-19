@@ -13,66 +13,63 @@ from fetch_btc_15m_orderbooks import build_slots, read_api_key, resolve_markets,
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description=(
-            "Fetch BTC 15-minute Polymarket market metadata and the exactly matching "
-            "Chainlink BTC/USD price window for each slot."
-        )
+        description="拉取 BTC 15 分钟 Polymarket 市场元数据，并对齐同一时间窗口内的 Chainlink BTC/USD 价格。"
     )
     parser.add_argument(
         "--days",
         type=int,
         default=30,
-        help="Trailing days of completed 15-minute slots to fetch. Default: 30",
+        help="拉取最近多少天已结束的 15 分钟 slot，默认 30。",
     )
     parser.add_argument(
         "--max-slots",
         type=int,
         default=None,
-        help="Optional cap on the most recent N slots, useful for validation runs.",
+        help="可选，仅处理最近 N 个 slot，适合验证或抽样。",
     )
     parser.add_argument(
         "--currency",
         default="btc/usd",
-        help="Chainlink currency pair. Default: btc/usd",
+        help="Chainlink 交易对，默认 btc/usd。",
     )
     parser.add_argument(
         "--key-file",
         default="key.txt",
-        help="Path to key file containing raw API key or `key = ...`.",
+        help="密钥文件路径，内容可以是原始 API Key 或 `key = ...`。",
     )
     parser.add_argument(
         "--output-dir",
         default="data/btc_15m_market_price_pairs",
-        help="Directory for aligned output files.",
+        help="对齐后结果文件的输出目录。",
     )
     parser.add_argument(
         "--price-limit",
         type=int,
         default=100,
-        help="Page size for Chainlink price requests. Dome max is 100.",
+        help="Chainlink 价格请求的分页大小，Dome 当前最大为 100。",
     )
     parser.add_argument(
         "--market-batch-size",
         type=int,
         default=100,
-        help="How many market slugs to resolve in each request.",
+        help="每次请求中批量解析多少个 market slug。",
     )
     parser.add_argument(
         "--retry-attempts",
         type=int,
         default=5,
-        help="How many times to retry transient API failures.",
+        help="临时 API 失败时的重试次数。",
     )
     parser.add_argument(
         "--retry-base-sleep",
         type=float,
         default=1.5,
-        help="Base sleep in seconds for exponential backoff retries.",
+        help="指数退避重试的基础等待秒数。",
     )
     parser.add_argument(
         "--save-price-files",
         action="store_true",
-        help="Write one JSON and one CSV file for each slot's Chainlink price window.",
+        help="为每个 slot 的 Chainlink 价格窗口额外写出一份 JSON 和 CSV。",
     )
     return parser.parse_args()
 
@@ -163,7 +160,7 @@ def main() -> None:
 
     slots = build_slots(args.days, args.max_slots)
     if not slots:
-        raise ValueError("No slots generated.")
+        raise ValueError("没有生成任何 slot。")
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

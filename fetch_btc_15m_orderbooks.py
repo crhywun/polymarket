@@ -30,73 +30,70 @@ class SlotWindow:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description=(
-            "Fetch Polymarket BTC 15-minute Up/Down orderbook snapshots from Dome "
-            "for the market's active 15-minute trading window."
-        )
+        description="从 Dome 拉取 Polymarket BTC 15 分钟 Up/Down 市场在活跃交易窗口内的订单簿快照。"
     )
     parser.add_argument(
         "--key-file",
         default="key.txt",
-        help="Path to a file containing either the raw API key or `key = ...`.",
+        help="密钥文件路径，内容可以是原始 API Key 或 `key = ...`。",
     )
     parser.add_argument(
         "--days",
         type=int,
         default=DEFAULT_DAYS,
-        help="How many trailing days of completed 15-minute markets to fetch.",
+        help="拉取最近多少天已结束的 15 分钟市场。",
     )
     parser.add_argument(
         "--output-dir",
         default="data/btc_15m_orderbooks",
-        help="Directory where manifests and gzipped JSONL snapshot files are written.",
+        help="manifest 和 gzip 压缩 JSONL 快照文件的输出目录。",
     )
     parser.add_argument(
         "--market-batch-size",
         type=int,
         default=DEFAULT_MARKET_BATCH_SIZE,
-        help="How many market slugs to resolve in each SDK request.",
+        help="每次 SDK 请求中批量解析多少个 market slug。",
     )
     parser.add_argument(
         "--page-limit",
         type=int,
         default=DEFAULT_PAGE_LIMIT,
-        help="Orderbook page size per request. Dome currently returns up to 200.",
+        help="订单簿历史接口的分页大小，Dome 当前最大为 200。",
     )
     parser.add_argument(
         "--page-sleep",
         type=float,
         default=DEFAULT_PAGE_SLEEP,
-        help="Sleep between paginated orderbook requests for the same token.",
+        help="同一个 token 连续翻页请求之间的等待时间（秒）。",
     )
     parser.add_argument(
         "--retry-attempts",
         type=int,
         default=DEFAULT_RETRY_ATTEMPTS,
-        help="How many times to retry transient SDK/API failures.",
+        help="临时 SDK/API 失败时的重试次数。",
     )
     parser.add_argument(
         "--retry-base-sleep",
         type=float,
         default=DEFAULT_RETRY_BASE_SLEEP,
-        help="Base sleep in seconds for exponential backoff retries.",
+        help="指数退避重试的基础等待秒数。",
     )
     parser.add_argument(
         "--max-slots",
         type=int,
         default=None,
-        help="Optional cap for the most recent N slots. Useful for test runs.",
+        help="可选，仅处理最近 N 个 slot，适合测试。",
     )
     parser.add_argument(
         "--max-pages-per-side",
         type=int,
         default=None,
-        help="Optional cap for paginated orderbook pages per market side.",
+        help="可选，限制每个市场边（Up/Down）最多拉取多少页订单簿。",
     )
     parser.add_argument(
         "--overwrite",
         action="store_true",
-        help="Overwrite existing per-side output files instead of skipping them.",
+        help="如果每个 side 的输出文件已存在则覆盖，而不是跳过。",
     )
     return parser.parse_args()
 
@@ -107,7 +104,7 @@ def read_api_key(path: Path) -> str:
         _, raw = raw.split("=", 1)
     api_key = raw.strip().strip('"').strip("'")
     if not api_key:
-        raise ValueError(f"No API key found in {path}")
+        raise ValueError(f"在 {path} 中没有读取到 API Key")
     return api_key
 
 
@@ -304,7 +301,7 @@ def main() -> None:
 
     slots = build_slots(args.days, args.max_slots)
     if not slots:
-        raise ValueError("No 15-minute slots were generated.")
+        raise ValueError("没有生成任何 15 分钟 slot。")
 
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)

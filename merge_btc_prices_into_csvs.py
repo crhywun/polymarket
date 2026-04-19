@@ -8,22 +8,22 @@ from pathlib import Path
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Merge per-slot BTC price files back into plain orderbook CSVs."
+        description="将每个 15 分钟市场对应的 BTC 价格文件回填合并到原始订单簿 CSV 中。"
     )
     parser.add_argument(
         "--input-dir",
         default="data/btc_15m_orderbook_csv_month",
-        help="Directory containing dated orderbook CSV folders and prices/ subfolder.",
+        help="包含按日期分组的订单簿 CSV 目录，以及其 prices/ 子目录。",
     )
     parser.add_argument(
         "--output-dir",
         default="data/btc_15m_orderbook_csv_month_enriched",
-        help="Directory to write enriched CSV files with BTC price columns.",
+        help="写入带 BTC 价格列的增强版 CSV 输出目录。",
     )
     parser.add_argument(
         "--overwrite",
         action="store_true",
-        help="Overwrite existing enriched CSV files.",
+        help="如果增强版 CSV 已存在则覆盖。",
     )
     return parser.parse_args()
 

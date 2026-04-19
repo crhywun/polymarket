@@ -11,38 +11,38 @@ from dome_api_sdk import DomeClient
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Fetch Chainlink crypto price history from Dome API and save JSON/CSV."
+        description="从 Dome API 拉取 Chainlink 加密货币价格历史，并保存为 JSON/CSV。"
     )
     parser.add_argument(
         "--currency",
         default="btc/usd",
-        help="Chainlink currency pair, e.g. btc/usd",
+        help="Chainlink 交易对，例如 btc/usd",
     )
     parser.add_argument(
         "--start",
         required=True,
-        help="Start time in ISO format, e.g. 2026-04-15T14:15:00+00:00",
+        help="开始时间，ISO 格式，例如 2026-04-15T14:15:00+00:00",
     )
     parser.add_argument(
         "--end",
         required=True,
-        help="End time in ISO format, e.g. 2026-04-15T14:30:00+00:00",
+        help="结束时间，ISO 格式，例如 2026-04-15T14:30:00+00:00",
     )
     parser.add_argument(
         "--key-file",
         default="key.txt",
-        help="Path to key file containing raw API key or `key = ...`.",
+        help="密钥文件路径，内容可以是原始 API Key 或 `key = ...`。",
     )
     parser.add_argument(
         "--output-dir",
         default="data/chainlink_prices",
-        help="Directory for JSON/CSV output.",
+        help="JSON/CSV 输出目录。",
     )
     parser.add_argument(
         "--limit",
         type=int,
         default=100,
-        help="Page size. Dome max is 100.",
+        help="分页大小，Dome 当前最大为 100。",
     )
     return parser.parse_args()
 
@@ -53,14 +53,14 @@ def read_api_key(path: Path) -> str:
         _, raw = raw.split("=", 1)
     api_key = raw.strip().strip('"').strip("'")
     if not api_key:
-        raise ValueError(f"No API key found in {path}")
+        raise ValueError(f"在 {path} 中没有读取到 API Key")
     return api_key
 
 
 def parse_iso_datetime(value: str) -> datetime:
     dt = datetime.fromisoformat(value)
     if dt.tzinfo is None:
-        raise ValueError(f"Timezone is required in datetime: {value}")
+        raise ValueError(f"时间必须包含时区信息：{value}")
     return dt.astimezone(timezone.utc)
 
 
@@ -69,7 +69,7 @@ def main() -> None:
     start = parse_iso_datetime(args.start)
     end = parse_iso_datetime(args.end)
     if end <= start:
-        raise ValueError("--end must be later than --start")
+        raise ValueError("--end 必须晚于 --start")
 
     api_key = read_api_key(Path(args.key_file))
     client = DomeClient({"api_key": api_key})

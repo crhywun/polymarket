@@ -11,17 +11,14 @@ import seaborn as sns
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description=(
-            "Plot Up/Down market mid prices on the left axis and BTC price on the "
-            "right axis from enriched orderbook CSV files."
-        )
+        description="从增强版订单簿 CSV 中绘制 Up/Down 中间价与 BTC 价格的双 Y 轴图。"
     )
-    parser.add_argument("--up", required=True, help="Path to the Up enriched CSV")
-    parser.add_argument("--down", required=True, help="Path to the Down enriched CSV")
+    parser.add_argument("--up", required=True, help="Up 侧增强版 CSV 路径")
+    parser.add_argument("--down", required=True, help="Down 侧增强版 CSV 路径")
     parser.add_argument(
         "--output",
         default=None,
-        help="Optional output PNG path. Defaults next to the Up CSV.",
+        help="可选的 PNG 输出路径，默认写到 Up CSV 同目录。",
     )
     return parser.parse_args()
 

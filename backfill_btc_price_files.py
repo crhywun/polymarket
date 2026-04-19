@@ -15,42 +15,40 @@ from fetch_btc_15m_orderbooks import read_api_key, retry_call
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description=(
-            "Backfill per-slot BTC price JSON/CSV files for existing enriched market CSVs."
-        )
+        description="为已有的市场 CSV 回填每个 15 分钟市场对应的 BTC 价格 JSON/CSV 文件。"
     )
     parser.add_argument(
         "--input-dir",
         default="data/btc_15m_enriched_csv_month",
-        help="Directory containing dated market CSV folders.",
+        help="包含按日期分组市场 CSV 文件夹的目录。",
     )
     parser.add_argument(
         "--key-file",
         default="key.txt",
-        help="Path to key file containing raw API key or `key = ...`.",
+        help="密钥文件路径，内容可以是原始 API Key 或 `key = ...`。",
     )
     parser.add_argument(
         "--price-page-limit",
         type=int,
         default=100,
-        help="Page size for Chainlink price requests. Dome max is 100.",
+        help="Chainlink 价格请求的分页大小，Dome 当前最大为 100。",
     )
     parser.add_argument(
         "--retry-attempts",
         type=int,
         default=5,
-        help="How many times to retry transient API failures.",
+        help="临时 API 失败时的重试次数。",
     )
     parser.add_argument(
         "--retry-base-sleep",
         type=float,
         default=1.5,
-        help="Base sleep in seconds for exponential backoff retries.",
+        help="指数退避重试的基础等待秒数。",
     )
     parser.add_argument(
         "--overwrite",
         action="store_true",
-        help="Overwrite existing price files.",
+        help="如果目标价格文件已存在则覆盖。",
     )
     return parser.parse_args()
 

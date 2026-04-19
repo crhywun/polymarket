@@ -17,73 +17,70 @@ from fetch_btc_15m_orderbooks import build_slots, read_api_key, resolve_markets,
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description=(
-            "Fetch BTC 15-minute Polymarket orderbook snapshots and enrich each CSV row "
-            "with the aligned Chainlink BTC/USD price."
-        )
+        description="拉取 BTC 15 分钟 Polymarket 订单簿快照，并在每一行 CSV 中补齐对齐后的 Chainlink BTC/USD 价格。"
     )
     parser.add_argument(
         "--days",
         type=int,
         default=30,
-        help="Trailing days of completed 15-minute slots to fetch. Default: 30",
+        help="拉取最近多少天已结束的 15 分钟 slot，默认 30。",
     )
     parser.add_argument(
         "--max-slots",
         type=int,
         default=None,
-        help="Optional cap for the most recent N slots, useful for sample runs.",
+        help="可选，仅处理最近 N 个 slot，适合样本测试。",
     )
     parser.add_argument(
         "--key-file",
         default="key.txt",
-        help="Path to key file containing raw API key or `key = ...`.",
+        help="密钥文件路径，内容可以是原始 API Key 或 `key = ...`。",
     )
     parser.add_argument(
         "--output-dir",
         default="data/btc_15m_enriched_csv",
-        help="Directory where enriched CSVs and manifest will be written.",
+        help="增强版 CSV 和 manifest 的输出目录。",
     )
     parser.add_argument(
         "--depth",
         type=int,
         default=5,
-        help="How many best bid/ask levels to retain in the CSV. Default: 5",
+        help="CSV 中保留多少档最优买卖盘，默认 5。",
     )
     parser.add_argument(
         "--market-batch-size",
         type=int,
         default=100,
-        help="How many market slugs to resolve in each request.",
+        help="每次请求中批量解析多少个 market slug。",
     )
     parser.add_argument(
         "--orderbook-page-limit",
         type=int,
         default=200,
-        help="Page size for orderbook history requests. Dome currently returns up to 200.",
+        help="订单簿历史请求的分页大小，Dome 当前最大为 200。",
     )
     parser.add_argument(
         "--price-page-limit",
         type=int,
         default=100,
-        help="Page size for Chainlink price requests. Dome max is 100.",
+        help="Chainlink 价格请求的分页大小，Dome 当前最大为 100。",
     )
     parser.add_argument(
         "--retry-attempts",
         type=int,
         default=5,
-        help="How many times to retry transient API failures.",
+        help="临时 API 失败时的重试次数。",
     )
     parser.add_argument(
         "--retry-base-sleep",
         type=float,
         default=1.5,
-        help="Base sleep in seconds for exponential backoff retries.",
+        help="指数退避重试的基础等待秒数。",
     )
     parser.add_argument(
         "--overwrite",
         action="store_true",
-        help="Overwrite existing CSV files instead of skipping them.",
+        help="如果 CSV 已存在则覆盖，而不是跳过。",
     )
     return parser.parse_args()
 

@@ -25,16 +25,16 @@ class Point:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Render Up/Down CSV price series into a single combined SVG."
+        description="将 Up/Down 两份 CSV 的价格序列绘制到同一张 SVG 图中。"
     )
-    parser.add_argument("--up", required=True, help="Up-side CSV path")
-    parser.add_argument("--down", required=True, help="Down-side CSV path")
+    parser.add_argument("--up", required=True, help="Up 侧 CSV 路径")
+    parser.add_argument("--down", required=True, help="Down 侧 CSV 路径")
     parser.add_argument(
         "--output",
         default=None,
-        help="Optional SVG output path. Defaults next to the Up CSV.",
+        help="可选的 SVG 输出路径，默认写到 Up CSV 同目录。",
     )
-    parser.add_argument("--title", default=None, help="Optional title override.")
+    parser.add_argument("--title", default=None, help="可选，自定义图标题。")
     return parser.parse_args()
 
 
@@ -124,7 +124,7 @@ def build_panel(
         if parse_float(row["bid_1_price"]) is not None and parse_float(row["ask_1_price"]) is not None
     ]
     if not filtered_rows:
-        raise ValueError(f"No rows with both bid_1_price and ask_1_price available for panel {panel_title}.")
+        raise ValueError(f"{panel_title} 面板没有同时包含 bid_1_price 和 ask_1_price 的有效行。")
 
     timestamps = [int(row["timestamp_ms"]) for row in filtered_rows]
     bid_1 = [parse_float(row["bid_1_price"]) for row in filtered_rows]
@@ -316,7 +316,7 @@ def main() -> None:
     up_rows = load_rows(up_path)
     down_rows = load_rows(down_path)
     if not up_rows or not down_rows:
-        raise ValueError("Up or Down CSV is empty.")
+        raise ValueError("Up 或 Down 的 CSV 为空。")
 
     default_output = up_path.with_name(up_path.stem.replace("__up", "__up_down_combined") + ".svg")
     output_path = Path(args.output) if args.output else default_output

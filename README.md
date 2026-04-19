@@ -1,37 +1,37 @@
-# Polymarket BTC 15m Toolkit
+# Polymarket BTC 15 分钟工具集
 
-Utilities for pulling BTC 15-minute `Up/Down` Polymarket orderbook snapshots from Dome, pairing them with Chainlink `btc/usd` prices, converting snapshots to CSV, and generating quick validation charts.
+这个仓库用于从 Dome 拉取 BTC 15 分钟 `Up/Down` Polymarket 市场的订单簿快照，对齐 Chainlink `btc/usd` 价格，转换成 CSV，并生成用于快速核验的图表。
 
-## What This Repo Covers
+## 仓库功能
 
-- Resolve markets named like `btc-updown-15m-{slot_start_utc_timestamp}`.
-- Pull only the market's active 15-minute trading window.
-- Save raw orderbook history or flattened top-of-book CSV snapshots.
-- Backfill per-slot Chainlink BTC price files.
-- Merge BTC price columns back into orderbook CSVs.
-- Render market overview charts for quick sanity checks.
+- 解析形如 `btc-updown-15m-{slot_start_utc_timestamp}` 的市场名称。
+- 只拉取市场真实活跃交易的 15 分钟窗口。
+- 保存原始订单簿历史，或转换后的扁平化 CSV 快照。
+- 为每个 15 分钟市场回填 Chainlink BTC 价格文件。
+- 将 BTC 价格列合并回订单簿 CSV。
+- 生成市场概览图，便于快速核验数据。
 
-## Scripts
+## 脚本说明
 
-- `fetch_btc_15m_orderbooks.py`: raw orderbook history to `jsonl.gz`
-- `convert_orderbooks_to_csv.py`: raw `jsonl.gz` to flat CSV with top-N levels
-- `fetch_btc_15m_orderbook_csvs.py`: direct orderbook CSV export
-- `backfill_btc_price_files.py`: save per-slot BTC price JSON/CSV
-- `merge_btc_prices_into_csvs.py`: merge BTC price columns into orderbook CSVs
-- `fetch_chainlink_prices.py`: standalone Chainlink price puller
-- `plot_market_overview.py`: polished overview plot for a single enriched market
-- `plot_up_down_btc_dual_axis.py`: simple dual-axis chart
-- `plot_up_down_combined_svg.py`: SVG price comparison chart
+- `fetch_btc_15m_orderbooks.py`：拉取原始订单簿历史并保存为 `jsonl.gz`
+- `convert_orderbooks_to_csv.py`：将原始 `jsonl.gz` 转成扁平 CSV，并保留前 N 档
+- `fetch_btc_15m_orderbook_csvs.py`：直接导出订单簿 CSV
+- `backfill_btc_price_files.py`：为每个市场写出 BTC 价格 JSON/CSV
+- `merge_btc_prices_into_csvs.py`：把 BTC 价格列合并回订单簿 CSV
+- `fetch_chainlink_prices.py`：单独拉取 Chainlink 价格
+- `plot_market_overview.py`：为单个增强版市场绘制概览图
+- `plot_up_down_btc_dual_axis.py`：绘制简单的双 Y 轴对比图
+- `plot_up_down_combined_svg.py`：输出 SVG 版的 Up/Down 对比图
 
-## Data Workflow
+## 数据流程
 
-Recommended sequential flow:
+推荐按顺序执行：
 
-1. Pull orderbook CSVs first.
-2. Pull BTC price files second.
-3. Merge BTC prices back into the orderbook CSVs.
+1. 先拉订单簿 CSV。
+2. 再拉 BTC 价格文件。
+3. 最后把 BTC 价格合并回订单簿 CSV。
 
-Example:
+示例：
 
 ```powershell
 python fetch_btc_15m_orderbook_csvs.py --days 30 --output-dir data/btc_15m_orderbook_csv_month_seq
@@ -39,9 +39,9 @@ python backfill_btc_price_files.py --input-dir data/btc_15m_orderbook_csv_month_
 python merge_btc_prices_into_csvs.py --input-dir data/btc_15m_orderbook_csv_month_seq
 ```
 
-## Plotting
+## 画图
 
-Generate the overview chart for one enriched market:
+为单个增强版市场生成概览图：
 
 ```powershell
 python plot_market_overview.py `
@@ -50,49 +50,49 @@ python plot_market_overview.py `
   --output docs/examples/market_overview_1773893700.png
 ```
 
-The overview chart contains a single panel with:
+这张概览图是单面板，包含：
 
-- `Up` and `Down` top-of-book mid prices
-- BTC/USD on a second y-axis
-- bid/ask bands for both sides
+- `Up` 和 `Down` 的最优档中间价
+- 右侧 Y 轴上的 BTC/USD 价格
+- Up/Down 两边各自的 bid/ask 价格带
 
-## Example Charts
+## 示例图
 
-### Example 1
+### 示例 1
 
 `btc-updown-15m-1773893700`
 
 ![Market overview 1773893700](docs/examples/market_overview_1773893700.png)
 
-Raw data:
+原始数据：
 
 - [btc-updown-15m-1773893700__up.csv](docs/example_csv/btc-updown-15m-1773893700__up.csv)
 - [btc-updown-15m-1773893700__down.csv](docs/example_csv/btc-updown-15m-1773893700__down.csv)
 
-### Example 2
+### 示例 2
 
 `btc-updown-15m-1773947700`
 
 ![Market overview 1773947700](docs/examples/market_overview_1773947700.png)
 
-Raw data:
+原始数据：
 
 - [btc-updown-15m-1773947700__up.csv](docs/example_csv/btc-updown-15m-1773947700__up.csv)
 - [btc-updown-15m-1773947700__down.csv](docs/example_csv/btc-updown-15m-1773947700__down.csv)
 
-### Example 3
+### 示例 3
 
 `btc-updown-15m-1774040400`
 
 ![Market overview 1774040400](docs/examples/market_overview_1774040400.png)
 
-Raw data:
+原始数据：
 
 - [btc-updown-15m-1774040400__up.csv](docs/example_csv/btc-updown-15m-1774040400__up.csv)
 - [btc-updown-15m-1774040400__down.csv](docs/example_csv/btc-updown-15m-1774040400__down.csv)
 
-## Notes
+## 说明
 
-- `key.txt` and `data/` are intentionally ignored by git.
-- Dome orderbook history is event-driven, so large time gaps can be normal.
-- The CSV conversion logic sorts bids descending and asks ascending before keeping top-of-book levels.
+- `key.txt` 和 `data/` 已被 `.gitignore` 忽略，不会上传到仓库。
+- Dome 的订单簿历史是事件驱动的，因此出现较长时间空档并不一定是异常。
+- CSV 转换逻辑会先将 bids 按价格降序排序、asks 按价格升序排序，再截取最优档位。

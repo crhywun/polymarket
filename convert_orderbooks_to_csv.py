@@ -14,31 +14,28 @@ DEFAULT_DEPTH = 5
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description=(
-            "Convert Dome/Polymarket orderbook snapshot JSONL.GZ files into flat CSV "
-            "rows with top-N bid/ask depth."
-        )
+        description="将 Dome/Polymarket 的订单簿快照 JSONL.GZ 转成扁平 CSV，并保留前 N 档买卖盘。"
     )
     parser.add_argument(
         "--input",
         required=True,
-        help="Input .jsonl.gz file or a directory containing such files.",
+        help="输入的 .jsonl.gz 文件，或包含这类文件的目录。",
     )
     parser.add_argument(
         "--output-dir",
         default="csv_orderbooks",
-        help="Directory where converted CSV files will be written.",
+        help="转换后的 CSV 输出目录。",
     )
     parser.add_argument(
         "--depth",
         type=int,
         default=DEFAULT_DEPTH,
-        help="How many bid/ask levels to retain in the CSV.",
+        help="CSV 中保留的买卖盘档位数。",
     )
     parser.add_argument(
         "--overwrite",
         action="store_true",
-        help="Overwrite existing CSV outputs.",
+        help="如果目标 CSV 已存在则覆盖。",
     )
     return parser.parse_args()
 
@@ -46,12 +43,12 @@ def parse_args() -> argparse.Namespace:
 def iter_input_files(path: Path) -> Iterable[Path]:
     if path.is_file():
         if path.suffixes[-2:] != [".jsonl", ".gz"]:
-            raise ValueError(f"Expected a .jsonl.gz file, got {path}")
+            raise ValueError(f"期望输入为 .jsonl.gz 文件，实际得到：{path}")
         yield path
         return
 
     if not path.is_dir():
-        raise ValueError(f"Input path does not exist: {path}")
+        raise ValueError(f"输入路径不存在：{path}")
 
     for file_path in sorted(path.rglob("*.jsonl.gz")):
         yield file_path
@@ -136,7 +133,7 @@ def convert_file(input_path: Path, output_path: Path, depth: int) -> int:
             if record_type != "snapshot":
                 continue
             if metadata is None:
-                raise ValueError(f"Snapshot encountered before metadata in {input_path}")
+                raise ValueError(f"文件 {input_path} 中快照记录出现在 metadata 之前")
 
             timestamp = record.get("timestamp")
             indexed_at = record.get("indexedAt")
