@@ -18,7 +18,7 @@
 先安装依赖：
 
 ```powershell
-pip install dome-api-sdk pandas matplotlib seaborn
+pip install -r requirements.txt
 ```
 
 如果你使用 Conda，也可以先创建虚拟环境再安装：
@@ -26,7 +26,7 @@ pip install dome-api-sdk pandas matplotlib seaborn
 ```powershell
 conda create -n polymarket python=3.11 -y
 conda activate polymarket
-pip install dome-api-sdk pandas matplotlib seaborn
+pip install -r requirements.txt
 ```
 
 ## 配置 API Key

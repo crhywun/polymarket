@@ -1,0 +1,4 @@
+dome-api-sdk
+pandas
+matplotlib
+seaborn
