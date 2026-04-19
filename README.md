@@ -66,8 +66,8 @@ The overview chart contains a single panel with:
 
 Raw data:
 
-- [btc-updown-15m-1773893700__up.csv](docs/examples/data/btc-updown-15m-1773893700__up.csv)
-- [btc-updown-15m-1773893700__down.csv](docs/examples/data/btc-updown-15m-1773893700__down.csv)
+- [btc-updown-15m-1773893700__up.csv](docs/example_csv/btc-updown-15m-1773893700__up.csv)
+- [btc-updown-15m-1773893700__down.csv](docs/example_csv/btc-updown-15m-1773893700__down.csv)
 
 ### Example 2
 
@@ -77,8 +77,8 @@ Raw data:
 
 Raw data:
 
-- [btc-updown-15m-1773947700__up.csv](docs/examples/data/btc-updown-15m-1773947700__up.csv)
-- [btc-updown-15m-1773947700__down.csv](docs/examples/data/btc-updown-15m-1773947700__down.csv)
+- [btc-updown-15m-1773947700__up.csv](docs/example_csv/btc-updown-15m-1773947700__up.csv)
+- [btc-updown-15m-1773947700__down.csv](docs/example_csv/btc-updown-15m-1773947700__down.csv)
 
 ### Example 3
 
@@ -88,8 +88,8 @@ Raw data:
 
 Raw data:
 
-- [btc-updown-15m-1774040400__up.csv](docs/examples/data/btc-updown-15m-1774040400__up.csv)
-- [btc-updown-15m-1774040400__down.csv](docs/examples/data/btc-updown-15m-1774040400__down.csv)
+- [btc-updown-15m-1774040400__up.csv](docs/example_csv/btc-updown-15m-1774040400__up.csv)
+- [btc-updown-15m-1774040400__down.csv](docs/example_csv/btc-updown-15m-1774040400__down.csv)
 
 ## Notes
 
